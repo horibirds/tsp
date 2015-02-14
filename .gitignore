@@ -1,4 +1,5 @@
-.pyc
+.DS_Store
+*.pyc
 images/
 meneki/
 ALL_tsp/
