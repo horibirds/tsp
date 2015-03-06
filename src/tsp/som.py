@@ -4,7 +4,7 @@ from Town import Town
 import random
 import calc
 import math
-def get_somlist_from_townlist(town_list, num):
+def get_rect_somlist_from_townlist(town_list, num):
     point_table = []
     for town in town_list:
         point_table.append((town.x, town.y))
@@ -13,6 +13,12 @@ def get_somlist_from_townlist(town_list, num):
     max_y = max(map(lambda x: x[1], point_table))
     min_x = min(map(lambda x: x[0], point_table))
     min_y = min(map(lambda x: x[1], point_table))
+
+    min_x += 20
+    min_y += 20
+    max_x -= 20
+    max_y -= 20
+
     length_x = max_x - min_x
     length_y = max_y - min_y
     neu_list = []
@@ -52,13 +58,27 @@ def get_somlist_from_townlist(town_list, num):
 
     return neu_list
 
+
+def get_circle_somlist(num, r, center):
+    som_list = []
+    for id in range(num):
+        rad = 2.0 * math.pi * id / num
+        x = r * math.cos(rad) + center[0]
+        y = r * math.sin(rad) + center[1]
+        name = ''
+        town = Town(id, name, x, y)
+        som_list.append(town)
+    return som_list
+
 def update(som_list, town_list):
     #入力を発火させてsom_listを動かす
     pass
 
 def hakka_all(town_list, som_list, r, num, move):
-
-    for town in town_list:
+    rand_list = range(len(town_list))
+    random.shuffle(rand_list)
+    for rand in rand_list:
+        town = town_list[rand]
         if town.fix == 1:
             continue
         som_list = hakka(town, som_list, r, num, move)
@@ -82,12 +102,12 @@ def hakka(town, som_list, r, num, move):
             y = town.y - neu.y
             sin = y/dis
             cos = x/dis
-            neu.x += move*cos
-            neu.y += move*sin
+            neu.x += move*x
+            neu.y += move*y
             cnt += 1
 
             dis = calc.distance(town, neu)
-            if dis < 5:
+            if dis < 10:
                 town.fix = 1
                 neu.fix = 1
                 break
@@ -99,7 +119,6 @@ def fit_somlist_to_townlist(som_list, town_list):
     for town in town_list:
         id = 0
         min = 100000
-        id = 0
         for neu in som_list:
             if id in som_id_list:
                 id += 1
